@@ -46,9 +46,9 @@ These completed projects demonstrate the methodology in practice:
 
 | Project | Model Type | Source Format | Shaders | Bundle | Perf (M4 Pro) |
 |---------|-----------|---------------|---------|--------|---------------|
-| [webgpu-gemma](https://github.com/nicholasgasior/webgpu-gemma) | LLM (Gemma 3 1B) | GGUF Q8_0 | 18 | 12KB gz | 59.8 t/s |
-| [kitten-tts-webgpu](https://github.com/nicholasgasior/kitten-tts-webgpu) | TTS (Kitten TTS 80M) | ONNX (quantized) | 29 | 753KB gz | 3.3x RT |
-| [micro-handpose](https://github.com/nicholasgasior/micro-handpose) | Vision (Hand landmarks) | TFLite | 28 | 8KB gz | 2.2ms |
+| [webgpu-gemma](https://github.com/nicholasgasior/webgpu-gemma) | LLM (Gemma 3 1B) | GGUF Q8_0 | 18 | 12KB gz | 59.8 tok/s |
+| [kitten-tts-webgpu](https://github.com/svenflow/kitten-tts-webgpu) | TTS (Kitten TTS 80M) | ONNX (quantized) | 29 | 753KB gz | 3.3x RT |
+| [micro-handpose](https://github.com/svenflow/micro-handpose) | Vision (Hand landmarks) | TFLite | 28 | 8KB gz | 2.2ms |
 
 ## When to Use This
 
