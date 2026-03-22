@@ -521,7 +521,9 @@ For a 1B param Q8_0 model: ~1GB weights + ~50MB activations + ~50MB work = 1.1GB
 
 ### Phase 6: Activation Matching
 
-**Goal:** Validate correctness by comparing every intermediate WebGPU activation against Phase 3 references. This is where 90% of debugging happens.
+**Goal:** Validate correctness by comparing every intermediate WebGPU activation against Phase 3 references. **This is the most critical phase** — it's where 90% of debugging happens and where you prove your implementation actually works. Every single layer must be verified individually against the reference model.
+
+**Why this matters:** Without careful layer-by-layer activation comparison, bugs compound silently. A small error in layer 2 becomes a catastrophic error by layer 20. You can get plausible-looking output that is subtly wrong. The ONLY way to be confident is to match every intermediate activation against the reference.
 
 **Inputs:** Engine from Phase 5. Reference activations from Phase 3.
 
@@ -553,24 +555,55 @@ For a 1B param Q8_0 model: ~1GB weights + ~50MB activations + ~50MB work = 1.1GB
    - For each checkpoint: compare with `|a - b| <= atol + rtol * |b|`
    - Report: max absolute error, mean absolute error, pass/fail per checkpoint
 
-2. **Run and iterate.** The first run WILL fail. Debug systematically.
+2. **Compare EVERY layer, not just the final output.** This is non-negotiable. For each pipeline stage:
+   - Dump the WebGPU activation after that stage
+   - Load the corresponding reference `.npy` file
+   - Compare element-by-element
+   - If it doesn't match, STOP and fix it before moving to the next layer
 
-3. **Debugging strategy:**
-   - Start from the FIRST failing checkpoint
+   **Systematic layer-by-layer process:**
+   ```
+   For each layer/stage in the forward pass:
+     1. Run up to this point
+     2. Read back the GPU buffer
+     3. Compare against reference activation
+     4. If mismatch:
+        a. Check the INPUT to this layer (is it correct from the previous layer?)
+        b. If input is wrong → bug is upstream, go back
+        c. If input is correct but output is wrong → bug is in THIS layer's shader/dispatch
+        d. Print first 20 values of both reference and actual for visual inspection
+        e. Fix the bug
+        f. Re-run from the beginning to confirm the fix
+     5. Only proceed to next layer after this one passes
+   ```
+
+3. **Run and iterate.** The first run WILL fail. Debug systematically — never skip ahead.
+
+4. **Debugging strategy:**
+   - Start from the FIRST failing checkpoint — always
    - Read back the INPUT to that stage — if input is wrong, bug is upstream
    - Compare shapes first, then values
-   - Error magnitude guide: >100x = wrong weights/missing dequant. ~2x = missing sqrt(2). Small systematic = wrong activation or padding
+   - Error magnitude guide:
+     - **>100x off** = wrong weights, missing dequantization, or wrong weight tensor entirely
+     - **~2x off** = missing `sqrt(2)`, `1/sqrt(d)` scaling, or similar normalization constant
+     - **Small systematic offset** = wrong activation function, padding error, or off-by-one in indexing
+     - **Correct for first N elements, garbage after** = buffer size or stride bug
+     - **Random noise pattern** = using uninitialized buffer or wrong bind group
+   - Print a sample of values side-by-side (reference vs actual) — visual patterns reveal bugs faster than statistics
 
-4. **Tighten tolerances** as bugs are fixed:
+5. **Tighten tolerances** as bugs are fixed:
    - f32: `atol=0.01, rtol=0.01`
    - f16: `atol=0.1, rtol=0.05`
    - Final output: model-dependent (audio ~1.0, landmarks ~0.01)
 
+6. **Don't declare victory on final output alone.** Even if the final output looks "close enough", go back and verify intermediate activations. A model can produce plausible output while having significant internal errors that cause failures on different inputs.
+
 **Success criteria:**
-- ALL activation checkpoints pass within tolerance
+- ALL activation checkpoints pass within tolerance — every single one, not just the first and last
 - Final output matches reference (correct text, recognizable audio, accurate landmarks)
-- No NaN or Inf values anywhere
+- No NaN or Inf values anywhere in any intermediate activation
 - Fix bugs in pipeline order — don't fix downstream while upstream is broken
+- Each layer verified independently before proceeding to the next
 
 ---
 
