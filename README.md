@@ -2,6 +2,14 @@
 
 Convert any ML model into a standalone browser project with hand-written WGSL compute shaders. No runtime framework, no ONNX Runtime, no transformers.js. The output is a zero-dependency TypeScript package that runs inference entirely via WebGPU compute dispatches.
 
+## How to Use This Repo
+
+1. **Read [`METHODOLOGY.md`](./METHODOLOGY.md)** — the 9-phase guide from model file to published npm package
+2. **Copy [`templates/`](./templates/)** into your new `{model-name}-webgpu/` project
+3. **Follow the phases** — inspect → extract → reference → shaders → engine → validate → optimize → mobile → publish
+
+Each phase has clear inputs, outputs, and success criteria. Typical timeline: 3-4 days for someone familiar with WebGPU, 5-7 days for a first-timer.
+
 ## Why Hand-Written Shaders?
 
 | | Framework (ONNX Runtime Web) | model-to-webgpu |
