@@ -1,4 +1,4 @@
-# WebGPU Forge — Known Bug Database
+# model-to-webgpu — Known Bug Database
 
 Reference for Phase 6 activation matching debugging.
 

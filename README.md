@@ -1,10 +1,10 @@
-# WebGPU Forge 🔨
+# model-to-webgpu 🔨
 
 Convert any ML model into a standalone browser project with hand-written WGSL compute shaders. No runtime framework, no ONNX Runtime, no transformers.js. The output is a zero-dependency TypeScript package that runs inference entirely via WebGPU compute dispatches.
 
 ## Why Hand-Written Shaders?
 
-| | Framework (ONNX Runtime Web) | WebGPU Forge |
+| | Framework (ONNX Runtime Web) | model-to-webgpu |
 |---|---|---|
 | **Bundle size** | 2-5MB runtime | 8-12KB gzipped |
 | **Dependencies** | onnxruntime-web, transformers.js | Zero |
@@ -52,7 +52,7 @@ These completed projects demonstrate the methodology in practice:
 
 ## When to Use This
 
-✅ **Use WebGPU Forge when:**
+✅ **Use model-to-webgpu when:**
 - You want the smallest possible bundle for browser ML
 - You need zero runtime dependencies
 - You want full control over every GPU dispatch

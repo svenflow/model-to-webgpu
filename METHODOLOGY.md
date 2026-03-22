@@ -1,4 +1,4 @@
-# WebGPU Forge Methodology
+# model-to-webgpu Methodology
 
 Convert any ML model into a standalone browser project with hand-written WGSL compute shaders. No runtime framework, no ONNX Runtime, no transformers.js. The output is a zero-dependency TypeScript package that runs inference entirely via WebGPU compute dispatches.
 
