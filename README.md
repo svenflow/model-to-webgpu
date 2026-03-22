@@ -2,7 +2,21 @@
 
 Convert any ML model into a standalone browser project with hand-written WGSL compute shaders. No runtime framework, no ONNX Runtime, no transformers.js. The output is a zero-dependency TypeScript package that runs inference entirely via WebGPU compute dispatches.
 
-## How to Use This Repo
+## Install
+
+As a [Claude Code skill](https://skills.sh):
+
+```bash
+npx skills add svenflow/model-to-webgpu
+```
+
+Or clone the repo directly:
+
+```bash
+git clone https://github.com/svenflow/model-to-webgpu.git
+```
+
+## How to Use
 
 1. **Read [`METHODOLOGY.md`](./METHODOLOGY.md)** — the 9-phase guide from model file to published npm package
 2. **Copy [`templates/`](./templates/)** into your new `{model-name}-webgpu/` project
