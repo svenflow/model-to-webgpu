@@ -1,0 +1,32 @@
+{
+  "name": "MODEL_NAME-webgpu",
+  "version": "0.1.0",
+  "description": "MODEL_DESCRIPTION — zero-dependency WebGPU inference",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "models"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "npx playwright test",
+    "serve": "npx serve . -l 3000 --no-clipboard"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": [
+    "webgpu",
+    "ml",
+    "inference",
+    "wgsl",
+    "zero-dependency"
+  ],
+  "license": "MIT"
+}
